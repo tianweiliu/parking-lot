@@ -50,7 +50,10 @@ namespace parking_lot
                 }
             }
 
-            return (Car)car;
+            if (car != null)
+                return (Car) car;
+            
+            throw new Exception("Invalid ticket!");
         }
     }
 }
