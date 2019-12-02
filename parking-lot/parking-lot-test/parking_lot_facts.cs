@@ -89,7 +89,12 @@ namespace parking_lot_test
         [Fact]
         void should_return_a_ticket_when_given_a_car_to_parking_boy()
         {
-            
+            var parkingBoy = new ParkingBoy(new List<ParkingLot>
+            {
+                new ParkingLot()
+            });
+            var ticket = parkingBoy.Park(new Car());
+            Assert.NotNull(ticket);
         }
 
         // 2.  given a car to parking boy when car parking has empty space then park at the first space 
