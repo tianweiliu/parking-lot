@@ -200,6 +200,20 @@ namespace parking_lot_test
             Assert.Equal(car, returnedCar);
         }
         // 7.  given a ticket to parking boy when parkinglot has driver parked car under boy's management then get the car
+        [Fact]
+        void should_return_self_parked_car_at_parking_boy_managed_lot_when_give_parking_boy_ticket()
+        {
+            var parkingLot = new ParkingLot();
+            var parkingBoy = new ParkingBoy(new List<ParkingLot>
+            {
+                parkingLot
+            });
+            var car = new Car();
+            var ticket = parkingLot.Park(car);
+            Assert.NotNull(ticket);
+            var returnedCar = parkingBoy.GetCar(ticket);
+            Assert.Equal(car, returnedCar);
+        }
         // 8.  given a ticket to parking boy when parkinglot has driver parked car not under boy's management then get a message
         // 9.  given a used ticket to parking boy when parkinglot has driver parked car then get a message
         // 10. given an invalid ticket to parking boy when parkinglot then get a message
