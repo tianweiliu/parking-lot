@@ -120,6 +120,35 @@ namespace parking_lot_test
             Assert.Equal(car, parkingLot2.GetCar(ticket));
         }
         // 3.  given a car to parking boy when a previously full parking lot now has empty space then park at the previous parking lot
+        [Fact]
+        void should_park_car_at_first_empty_space_if_previously_space_was_occupied_but_now_vacant()
+        {
+            var parkingLot1 = new ParkingLot();
+            var parkingLot2 = new ParkingLot();
+            var parkingBoy = new ParkingBoy(new List<ParkingLot>
+            {
+                parkingLot1,
+                parkingLot2
+            });
+            object ticket;
+            for (var i = 0; i < parkingLotSize - 1; i++)
+            {
+                parkingLot1.Park(new Car());
+            }
+
+            ticket = parkingLot1.Park(new Car());
+
+            Assert.Throws<Exception>(() => parkingLot1.Park(new Car()));
+            
+            parkingLot1.GetCar(ticket);
+            ticket = null;
+
+            var car = new Car();
+            ticket = parkingBoy.Park(car);
+            Assert.NotNull(ticket);
+            Assert.Throws<Exception>(() => parkingLot2.GetCar(ticket));
+            Assert.Equal(car, parkingLot1.GetCar(ticket));
+        }
         // 4.  given a car to parking boy when car parking has no empty space then get a message
         // 5.  given a car to parking boy when car parking has no empty space but not under his management paring lot has empty space then get a message
     }
