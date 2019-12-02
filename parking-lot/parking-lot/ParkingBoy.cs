@@ -22,7 +22,7 @@ namespace parking_lot
                     ticket = parkingLot.Park(car);
                     break;
                 }
-                catch (Exception e)
+                catch (Exception)
                 {
                     // ignored
                 }
@@ -32,6 +32,25 @@ namespace parking_lot
                 return ticket;
             
             throw new Exception("Parking lots are full!");
+        }
+
+        public Car GetCar(object ticket)
+        {
+            object car = null;
+            foreach (var parkingLot in ManagedParkingLots)
+            {
+                try
+                {
+                    car = parkingLot.GetCar(ticket);
+                    break;
+                }
+                catch (Exception)
+                {
+                    // ignored
+                }
+            }
+
+            return (Car)car;
         }
     }
 }
