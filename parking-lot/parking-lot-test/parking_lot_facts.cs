@@ -262,5 +262,15 @@ namespace parking_lot_test
             Assert.Equal("Invalid ticket!", error.Message);
         }
         // 10. given an invalid ticket to parking boy when parkinglot then get a message
+        [Fact]
+        void should_throw_error_when_give_parking_boy_invalid_ticket()
+        {
+            var parkingBoy = new ParkingBoy(new List<ParkingLot>
+            {
+                new ParkingLot()
+            });
+            var error = Assert.Throws<Exception>(() => parkingBoy.GetCar(new object()));
+            Assert.Equal("Invalid ticket!", error.Message);
+        }
     }
 }
