@@ -229,7 +229,38 @@ namespace parking_lot_test
             var error = Assert.Throws<Exception>(() => parkingBoy.GetCar(ticket));
             Assert.Equal("Invalid ticket!", error.Message);
         }
-        // 9.  given a used ticket to parking boy when parkinglot has driver parked car then get a message
+        // 9.  given a used ticket to parking boy when parkinglot has parking boy parked car then get a message
+        [Fact]
+        void should_throw_error_when_give_parking_boy_used_ticket_parked_by_parking_boy()
+        {
+            var parkingLot = new ParkingLot();
+            var parkingBoy = new ParkingBoy(new List<ParkingLot>
+            {
+                parkingLot
+            });
+            var car = new Car();
+            var ticket = parkingBoy.Park(car);
+            Assert.NotNull(ticket);
+            Assert.NotNull(parkingBoy.GetCar(ticket));
+            var error = Assert.Throws<Exception>(() => parkingBoy.GetCar(ticket));
+            Assert.Equal("Invalid ticket!", error.Message);
+        }
+        // 9.1.  given a used ticket to parking boy when parkinglot has driver parked car then get a message
+        [Fact]
+        void should_throw_error_when_give_parking_boy_used_ticket_parked_by_driver()
+        {
+            var parkingLot = new ParkingLot();
+            var parkingBoy = new ParkingBoy(new List<ParkingLot>
+            {
+                parkingLot
+            });
+            var car = new Car();
+            var ticket = parkingLot.Park(car);
+            Assert.NotNull(ticket);
+            Assert.NotNull(parkingLot.GetCar(ticket));
+            var error = Assert.Throws<Exception>(() => parkingBoy.GetCar(ticket));
+            Assert.Equal("Invalid ticket!", error.Message);
+        }
         // 10. given an invalid ticket to parking boy when parkinglot then get a message
     }
 }
