@@ -150,6 +150,22 @@ namespace parking_lot_test
             Assert.Equal(car, parkingLot1.GetCar(ticket));
         }
         // 4.  given a car to parking boy when car parking has no empty space then get a message
+        [Fact]
+        void should_return_error_message_when_given_a_car_to_parking_boy_while_parking_lots_are_full()
+        {
+            var parkingBoy = new ParkingBoy(new List<ParkingLot>
+            {
+                new ParkingLot(),
+                new ParkingLot()
+            });
+            for (var i = 0; i < parkingLotSize * 2; i++)
+            {
+                parkingBoy.Park(new Car());
+            }
+            var error = Assert.Throws<Exception>(() => parkingBoy.Park(new Car()));
+            Assert.Equal("Parking lots are full!", error.Message);
+        }
+        
         // 5.  given a car to parking boy when car parking has no empty space but not under his management paring lot has empty space then get a message
     }
 }

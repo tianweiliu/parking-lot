@@ -28,7 +28,10 @@ namespace parking_lot
                 }
             }
 
-            return ticket;
+            if (ticket != null)
+                return ticket;
+            
+            throw new Exception("Parking lots are full!");
         }
     }
 }
