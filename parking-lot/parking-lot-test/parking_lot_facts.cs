@@ -167,5 +167,22 @@ namespace parking_lot_test
         }
         
         // 5.  given a car to parking boy when car parking has no empty space but not under his management paring lot has empty space then get a message
+        [Fact]
+        void should_return_error_message_when_given_a_car_to_parking_boy_while_parking_lots_managed_by_him_are_full()
+        {
+            var notManagedParkingLot = new ParkingLot();
+            var managedParkingLot = new ParkingLot();
+            var parkingBoy = new ParkingBoy(new List<ParkingLot>
+            {
+                managedParkingLot
+            });
+            for (var i = 0; i < parkingLotSize; i++)
+            {
+                parkingBoy.Park(new Car());
+            }
+            Assert.NotNull(notManagedParkingLot.Park(new Car()));
+            var error = Assert.Throws<Exception>(() => parkingBoy.Park(new Car()));
+            Assert.Equal("Parking lots are full!", error.Message);
+        }
     }
 }
