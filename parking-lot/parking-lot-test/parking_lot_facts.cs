@@ -332,5 +332,34 @@ namespace parking_lot_test
             Assert.Equal(9, parkingLotB.GetAvailableSpace());
             Assert.Equal(10, parkingLotC.GetAvailableSpace());
         }
+        [Fact]
+        void should_save_to_the_managed_parking_lot_when_not_managed_parking_lot_has_more_left_space()
+        {
+            var parkingLotA = new ParkingLot(20);
+            var parkingLotB = new ParkingLot(20);
+            var parkingLotC = new ParkingLot(100);
+            var parkingBoy = new ParkingBoy(new List<ParkingLot>
+            {
+                parkingLotA,
+                parkingLotB
+            });
+            for (int i = 0; i < 15; i++)
+            {
+                parkingLotA.Park(new Car());
+            }
+            for (int i = 0; i < 10; i++)
+            {
+                parkingLotB.Park(new Car());
+            }
+            for (int i = 0; i < 10; i++)
+            {
+                parkingLotC.Park(new Car());
+            }
+
+            parkingBoy.Park(new Car());
+            Assert.Equal(5, parkingLotA.GetAvailableSpace());
+            Assert.Equal(9, parkingLotB.GetAvailableSpace());
+            Assert.Equal(90, parkingLotC.GetAvailableSpace());
+        }
     }
 }
