@@ -5,44 +5,49 @@ namespace parking_lot
 {
     public class ParkingLot
     {
-        private Dictionary<object, Car> ticketToCars;
+        private readonly Dictionary<object, Car> _ticketToCars;
+        private readonly int _totalSpaceCount;
 
-        public ParkingLot()
+        public ParkingLot(int totalSpaceCount)
         {
-            ticketToCars = new Dictionary<object, Car>();
+            _ticketToCars = new Dictionary<object, Car>();
+            _totalSpaceCount = totalSpaceCount;
         }
-        
+
         public object Park(Car car)
         {
             var ticket = new object();
-            var count = ticketToCars.Count;
-            if (count < 20)
+            var count = _ticketToCars.Count;
+            if (count < _totalSpaceCount)
             {
-                ticketToCars.Add(ticket, car);
+                _ticketToCars.Add(ticket, car);
                 return ticket;
             }
-            else
-            {
-                throw new Exception("ParkingLot is full");
-            }
+
+            throw new Exception("ParkingLot is full");
         }
 
         public object GetCar(object ticket)
         {
-            if (ticketToCars.ContainsKey(ticket))
+            if (_ticketToCars.ContainsKey(ticket))
             {
-                var car = ticketToCars[ticket];
-                ticketToCars.Remove(ticket);
+                var car = _ticketToCars[ticket];
+                _ticketToCars.Remove(ticket);
                 return car;
-                
-                
-            }
-            else
-            {
-                throw new Exception("Invalid ticket!");
-                
             }
 
+            throw new Exception("Invalid ticket!");
+
+        }
+
+        public int GetAvailableSpace()
+        {
+            return _totalSpaceCount - _ticketToCars.Count;
+        }
+
+        public bool IsTicketValid(object ticket)
+        {
+            return _ticketToCars.ContainsKey(ticket);
         }
     }
 }

@@ -14,45 +14,31 @@ namespace parking_lot
 
         public object Park(Car car)
         {
-            object ticket = null;
+            object ticket;
             foreach (var parkingLot in ManagedParkingLots)
             {
-                try
+                if (parkingLot.GetAvailableSpace() > 0)
                 {
                     ticket = parkingLot.Park(car);
-                    break;
-                }
-                catch (Exception)
-                {
-                    // ignored
+                    return ticket;
                 }
             }
 
-            if (ticket != null)
-                return ticket;
-            
             throw new Exception("Parking lots are full!");
         }
 
         public Car GetCar(object ticket)
         {
-            object car = null;
+            object car;
             foreach (var parkingLot in ManagedParkingLots)
             {
-                try
+                if (parkingLot.IsTicketValid(ticket))
                 {
                     car = parkingLot.GetCar(ticket);
-                    break;
-                }
-                catch (Exception)
-                {
-                    // ignored
+                    return car as Car;
                 }
             }
 
-            if (car != null)
-                return (Car) car;
-            
             throw new Exception("Invalid ticket!");
         }
     }
