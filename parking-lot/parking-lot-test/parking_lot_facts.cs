@@ -335,24 +335,24 @@ namespace parking_lot_test
         [Fact]
         void should_save_to_the_managed_parking_lot_when_not_managed_parking_lot_has_more_left_space()
         {
-            var parkingLotA = new ParkingLot(20);
-            var parkingLotC = new ParkingLot(100);
+            var managedParkingLot = new ParkingLot(20);
+            var unmanagedParkingLot = new ParkingLot(100);
             var parkingBoy = new ParkingBoy(new List<ParkingLot>
             {
-                parkingLotA
+                managedParkingLot
             });
             for (int i = 0; i < 15; i++)
             {
-                parkingLotA.Park(new Car());
+                managedParkingLot.Park(new Car());
             }
             for (int i = 0; i < 10; i++)
             {
-                parkingLotC.Park(new Car());
+                unmanagedParkingLot.Park(new Car());
             }
 
             parkingBoy.Park(new Car());
-            Assert.Equal(4, parkingLotA.GetAvailableSpace());
-            Assert.Equal(90, parkingLotC.GetAvailableSpace());
+            Assert.Equal(4, managedParkingLot.GetAvailableSpace());
+            Assert.Equal(90, unmanagedParkingLot.GetAvailableSpace());
         }
     }
 }
