@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace parking_lot
 {
@@ -12,17 +13,13 @@ namespace parking_lot
 
         public override object Park(Car car)
         {
-            object ticket;
-            foreach (var parkingLot in ManagedParkingLots)
+            var theMostSpaceParkingLot = GetTheMostSpaceParkingLot();
+            if (theMostSpaceParkingLot.GetAvailableSpace() == 0)
             {
-                if (parkingLot.GetAvailableSpace() > 0)
-                {
-                    ticket = parkingLot.Park(car);
-                    return ticket;
-                }
+                throw new Exception("Parking lots are full!");
             }
 
-            throw new Exception("Parking lots are full!");
+            return theMostSpaceParkingLot.Park(car);
         }
 
         public Car GetCar(object ticket)
@@ -38,6 +35,11 @@ namespace parking_lot
             }
 
             throw new Exception("Invalid ticket!");
+        }
+
+        private ParkingLot GetTheMostSpaceParkingLot()
+        {
+            return ManagedParkingLots.OrderByDescending(p => p.GetAvailableSpace()).First();
         }
     }
 }
