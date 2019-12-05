@@ -3,13 +3,13 @@ using System.Collections.Generic;
 
 namespace parking_lot
 {
-    public class ParkingBoy : ParkingAgent
+    public class ParkingBot : ParkingAgent
     {
-        public ParkingBoy(List<ParkingLot> parkingLots)
+        public ParkingBot(List<ParkingLot> parkingLots)
         {
             ManagedParkingLots = parkingLots;
         }
-
+        
         public override object Park(Car car)
         {
             object ticket;
@@ -23,21 +23,6 @@ namespace parking_lot
             }
 
             throw new Exception("Parking lots are full!");
-        }
-
-        public Car GetCar(object ticket)
-        {
-            object car;
-            foreach (var parkingLot in ManagedParkingLots)
-            {
-                if (parkingLot.IsTicketValid(ticket))
-                {
-                    car = parkingLot.GetCar(ticket);
-                    return car as Car;
-                }
-            }
-
-            throw new Exception("Invalid ticket!");
         }
     }
 }

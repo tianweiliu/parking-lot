@@ -147,6 +147,7 @@ namespace parking_lot_test
             {
                 parkingBoy.Park(new Car());
             }
+
             var error = Assert.Throws<Exception>(() => parkingBoy.Park(new Car()));
             Assert.Equal("Parking lots are full!", error.Message);
         }
@@ -165,6 +166,7 @@ namespace parking_lot_test
             {
                 parkingBoy.Park(new Car());
             }
+
             Assert.NotNull(notManagedParkingLot.Park(new Car()));
             var error = Assert.Throws<Exception>(() => parkingBoy.Park(new Car()));
             Assert.Equal("Parking lots are full!", error.Message);
@@ -277,5 +279,193 @@ namespace parking_lot_test
             var error = Assert.Throws<Exception>(() => parkingBoy.GetCar(new object()));
             Assert.Equal("Invalid ticket!", error.Message);
         }
-    }
+
+        [Fact]
+        void should_save_to_the_most_available_parking_lot()
+        {
+            var parkingLotA = new ParkingLot(20);
+            var parkingLotB = new ParkingLot(15);
+            var parkingBoy = new SmartParkingBoy(new List<ParkingLot>
+            {
+                parkingLotA,
+                parkingLotB
+            });
+            for (int i = 0; i < 15; i++)
+            {
+                parkingLotA.Park(new Car());
+            }
+
+            for (int i = 0; i < 4; i++)
+            {
+                parkingLotB.Park(new Car());
+            }
+
+            parkingBoy.Park(new Car());
+            Assert.Equal(5, parkingLotA.GetAvailableSpace());
+            Assert.Equal(10, parkingLotB.GetAvailableSpace());
+        }
+
+        [Fact]
+        void should_save_to_the_previous_parking_lot_when_parking_lot_left_space_is_equal()
+        {
+            var parkingLotA = new ParkingLot(20);
+            var parkingLotB = new ParkingLot(20);
+            var parkingLotC = new ParkingLot(20);
+            var parkingBoy = new SmartParkingBoy(new List<ParkingLot>
+            {
+                parkingLotA,
+                parkingLotB,
+                parkingLotC
+            });
+            for (int i = 0; i < 15; i++)
+            {
+                parkingLotA.Park(new Car());
+            }
+
+            for (int i = 0; i < 10; i++)
+            {
+                parkingLotB.Park(new Car());
+            }
+
+            for (int i = 0; i < 10; i++)
+            {
+                parkingLotC.Park(new Car());
+            }
+
+            parkingBoy.Park(new Car());
+            Assert.Equal(5, parkingLotA.GetAvailableSpace());
+            Assert.Equal(9, parkingLotB.GetAvailableSpace());
+            Assert.Equal(10, parkingLotC.GetAvailableSpace());
+        }
+
+        [Fact]
+        void should_save_to_the_managed_parking_lot_when_not_managed_parking_lot_has_more_left_space()
+        {
+            var managedParkingLot = new ParkingLot(20);
+            var unmanagedParkingLot = new ParkingLot(100);
+            var parkingBoy = new SmartParkingBoy(new List<ParkingLot>
+            {
+                managedParkingLot
+            });
+            for (int i = 0; i < 15; i++)
+            {
+                managedParkingLot.Park(new Car());
+            }
+
+            for (int i = 0; i < 10; i++)
+            {
+                unmanagedParkingLot.Park(new Car());
+            }
+
+            parkingBoy.Park(new Car());
+            Assert.Equal(4, managedParkingLot.GetAvailableSpace());
+            Assert.Equal(90, unmanagedParkingLot.GetAvailableSpace());
+        }
+
+
+        [Fact]
+        void should_return_same_ordered_list_when_given_ordered_list_to_parking_bot()
+        {
+            var parkingLot1 = new ParkingLot(parkingLotSize);
+            var parkingLot2 = new ParkingLot(parkingLotSize);
+            var managedParkingLots = new List<ParkingLot>
+            {
+                parkingLot1,
+                parkingLot2
+            };
+            var parkingBoy = new ParkingBot(managedParkingLots);
+            Assert.Equal(parkingLot2, parkingBoy.ManagedParkingLots[1]);
+            Assert.Equal(parkingLot1, parkingBoy.ManagedParkingLots[0]);
+        }
+
+        // 1.  given a car to parking boy when car parking has empty space then get a ticket
+        [Fact]
+        void should_return_a_ticket_when_given_a_car_to_parking_bot()
+        {
+            var parkingBoy = new ParkingBot(new List<ParkingLot>
+            {
+                new ParkingLot(parkingLotSize)
+            });
+            var ticket = parkingBoy.Park(new Car());
+            Assert.NotNull(ticket);
+        }
+
+        // 2.  given a car to parking boy when car parking has empty space then park at the first space
+        [Fact]
+        void should_park_car_at_first_empty_space_when_give_to_parking_bot()
+        {
+            var parkingLot1 = new ParkingLot(parkingLotSize);
+            var parkingLot2 = new ParkingLot(parkingLotSize);
+            var parkingBoy = new ParkingBot(new List<ParkingLot>
+            {
+                parkingLot1,
+                parkingLot2
+            });
+            for (var i = 0; i < parkingLotSize; i++)
+            {
+                parkingLot1.Park(new Car());
+            }
+
+            var car = new Car();
+            var ticket = parkingBoy.Park(car);
+            Assert.NotNull(ticket);
+            Assert.Throws<Exception>(() => parkingLot1.GetCar(ticket));
+            Assert.Equal(car, parkingLot2.GetCar(ticket));
+        }
+
+        // 4.  given a car to parking boy when car parking has no empty space then get a message
+        [Fact]
+        void should_return_error_message_when_given_a_car_to_parking_bot_while_parking_lots_are_full()
+        {
+            var parkingBoy = new ParkingBot(new List<ParkingLot>
+            {
+                new ParkingLot(parkingLotSize),
+                new ParkingLot(parkingLotSize)
+            });
+            for (var i = 0; i < parkingLotSize * 2; i++)
+            {
+                parkingBoy.Park(new Car());
+            }
+
+            var error = Assert.Throws<Exception>(() => parkingBoy.Park(new Car()));
+            Assert.Equal("Parking lots are full!", error.Message);
+        }
+
+        // 5.  given a car to parking boy when car parking has no empty space but not under his management paring lot has empty space then get a message
+        [Fact]
+        void should_return_error_message_when_given_a_car_to_parking_bot_while_parking_lots_managed_by_him_are_full()
+        {
+            var notManagedParkingLot = new ParkingLot(parkingLotSize);
+            var managedParkingLot = new ParkingLot(parkingLotSize);
+            var parkingBoy = new ParkingBot(new List<ParkingLot>
+            {
+                managedParkingLot
+            });
+            for (var i = 0; i < parkingLotSize; i++)
+            {
+                parkingBoy.Park(new Car());
+            }
+
+            Assert.NotNull(notManagedParkingLot.Park(new Car()));
+            var error = Assert.Throws<Exception>(() => parkingBoy.Park(new Car()));
+            Assert.Equal("Parking lots are full!", error.Message);
+        }
+
+
+        [Fact]
+        void should_get_a_car_when_give_ticket_given_by_parking_bot()
+        {
+            var parkingBoy = new ParkingBot(new List<ParkingLot>
+            {
+                _parkingLot
+            });
+            var car = new Car();
+            var ticket = parkingBoy.Park(car);
+            var getCar = _parkingLot.GetCar(ticket);
+            Assert.Same(car, getCar);
+        }
+    
+
+
+}
 }
