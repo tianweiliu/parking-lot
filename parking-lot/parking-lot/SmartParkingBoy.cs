@@ -6,8 +6,8 @@ namespace parking_lot
 {
     public class SmartParkingBoy : ParkingBoy
     {
-        
-        public override object Park(Car car)
+
+        public object Park(Car car)
         {
             var theMostSpaceParkingLot = GetTheMostSpaceParkingLot();
             if (theMostSpaceParkingLot.GetAvailableSpace() == 0)
@@ -17,7 +17,7 @@ namespace parking_lot
 
             return theMostSpaceParkingLot.Park(car);
         }
-        
+
 
         private ParkingLot GetTheMostSpaceParkingLot()
         {

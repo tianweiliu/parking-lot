@@ -3,14 +3,14 @@ using System.Collections.Generic;
 
 namespace parking_lot
 {
-    public class ParkingBot : ParkingAgent
+    public class ParkingBot : ParkingLotManager, ICarParking
     {
         public ParkingBot(List<ParkingLot> parkingLots)
         {
             ManagedParkingLots = parkingLots;
         }
-        
-        public override object Park(Car car)
+
+        public object Park(Car car)
         {
             object ticket;
             foreach (var parkingLot in ManagedParkingLots)

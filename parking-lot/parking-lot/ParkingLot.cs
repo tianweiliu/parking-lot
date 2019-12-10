@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace parking_lot
 {
-    public class ParkingLot
+    public class ParkingLot : ICarParking, ICarRetrieving
     {
         private readonly Dictionary<object, Car> _ticketToCars;
         private readonly int _totalSpaceCount;
@@ -27,7 +27,7 @@ namespace parking_lot
             throw new Exception("ParkingLot is full");
         }
 
-        public object GetCar(object ticket)
+        public Car GetCar(object ticket)
         {
             if (_ticketToCars.ContainsKey(ticket))
             {

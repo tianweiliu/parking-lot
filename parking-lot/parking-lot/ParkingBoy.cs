@@ -4,14 +4,14 @@ using System.Linq;
 
 namespace parking_lot
 {
-    public class ParkingBoy : ParkingAgent
+    public class ParkingBoy : ParkingLotManager, ICarParking, ICarRetrieving
     {
         public ParkingBoy(List<ParkingLot> parkingLots)
         {
             ManagedParkingLots = parkingLots;
         }
 
-        public override object Park(Car car)
+        public object Park(Car car)
         {
             var theMostSpaceParkingLot = GetTheMostSpaceParkingLot();
             if (theMostSpaceParkingLot.GetAvailableSpace() == 0)
